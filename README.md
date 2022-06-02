@@ -20,4 +20,6 @@ Github APIからデータを取得する。
 ・ReactHooksの再復習。useReducerを使用しデータを管理する。
 
 #### 使用するサイト
-https://www.techpit.jp/courses/194/curriculums/197/sections/1307/parts/5262
+https://www.techpit.jp/courses/194/curriculums/197/sections/1307/parts/526
+
+#### 備考
