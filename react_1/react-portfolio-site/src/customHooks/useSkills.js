@@ -1,13 +1,13 @@
 import { useEffect, useReducer } from 'react';
 import axios from 'axios';
+import { requestStates } from '../constants';
 
 import { skillReducer, initialState, actionTypes } from '../reducers/skillReducer';
 
 export const useSkills = () => {
 	const [state, dispatch] = useReducer(skillReducer, initialState);
 
-	useEffect(() => {
-		dispatch({ type: actionTypes.fetch });
+	const fetchReposApi = () => {
 		axios.get('https://api.github.com/users/m0216i/repos')
 			.then((response) => {
 				const languageList = response.data.map(res => res.language)
@@ -17,6 +17,15 @@ export const useSkills = () => {
 			.catch(() => {
 				dispatch({ type: actionTypes.error });
 			});
+	}
+
+	useEffect(() => {
+		if (state.requestState !== requestStates.loading) { return; }
+		fetchReposApi();
+	}, [state.requestState]);
+
+	useEffect(() => {
+		dispatch({ type: actionTypes.fetch });
 	}, []);
 
 	const generateLanguageCountObj = (allLanguageList) => {
@@ -31,9 +40,13 @@ export const useSkills = () => {
 		});
 	};
 
+	const DEFAULT_MAX_PERCENTAGE = 100;
+	const LANGUAGE_COUNT_BASE = 10;
+
+
 	const converseCountToPercentage = (count) => {
-		if (count > 10) { return 100; }
-		return count * 10;
+		if (count > LANGUAGE_COUNT_BASE) { return DEFAULT_MAX_PERCENTAGE; }
+		return count * LANGUAGE_COUNT_BASE;
 	};
 
 	const sortedLanguageList = () => (
